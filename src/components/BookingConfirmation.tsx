@@ -17,9 +17,15 @@ const BookingConfirmation = () => {
 
             // Retrieve persisted guest info
             const storedData = localStorage.getItem('pendingBooking');
+
             if (!storedData || !prebookIdFromUrl || !transactionId) {
+                const missing = [];
+                if (!storedData) missing.push('local storage data');
+                if (!prebookIdFromUrl) missing.push('prebookId from URL');
+                if (!transactionId) missing.push('transactionId from URL');
+
                 setStatus('error');
-                setError("Missing booking information. Please try again.");
+                setError(`Missing booking information: ${missing.join(', ')}. Please try again.`);
                 return;
             }
 
