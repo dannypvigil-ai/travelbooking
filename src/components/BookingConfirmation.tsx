@@ -85,11 +85,16 @@ const BookingConfirmation = () => {
     }
 
     if (status === 'error') {
+        const paramsObj = Object.fromEntries(searchParams.entries());
         return (
             <Container maxWidth="md" sx={{ mt: 4 }}>
                 <Alert severity="error" sx={{ mb: 2 }}>
                     {error}
                 </Alert>
+                <Paper sx={{ p: 2, mb: 2, bgcolor: '#f5f5f5' }}>
+                    <Typography variant="subtitle2">Debug Info (Current URL Params):</Typography>
+                    <pre>{JSON.stringify(paramsObj, null, 2)}</pre>
+                </Paper>
                 <Button variant="contained" onClick={() => navigate('/')}>
                     Return to Home
                 </Button>
