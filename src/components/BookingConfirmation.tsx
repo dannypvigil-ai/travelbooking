@@ -16,29 +16,37 @@ const BookingConfirmation = () => {
             const transactionId = searchParams.get('transactionId');
 
             // Retrieve persisted guest info
+            // Retrieve persisted guest info
             const storedData = localStorage.getItem('pendingBooking');
+            let storedPrebookId = null;
+            let storedTransactionId = null;
+            let guest = null;
 
-            if (!storedData || !prebookIdFromUrl || !transactionId) {
+            if (storedData) {
+                const parsed = JSON.parse(storedData);
+                guest = parsed.guest;
+                storedPrebookId = parsed.prebookId;
+                storedTransactionId = parsed.transactionId;
+            }
+
+            // Try to find transactionId from various sources: URL -> localStorage -> payment_intent (Stripe)
+            const finalTransactionId = transactionId || storedTransactionId || searchParams.get('payment_intent') || searchParams.get('paymentId');
+            const finalPrebookId = prebookIdFromUrl || storedPrebookId;
+
+            if (!storedData || !finalTransactionId || !finalPrebookId) {
                 const missing = [];
                 if (!storedData) missing.push('local storage data');
-                if (!prebookIdFromUrl) missing.push('prebookId from URL');
-                if (!transactionId) missing.push('transactionId from URL');
+                if (!finalTransactionId) missing.push('transactionId');
+                if (!finalPrebookId) missing.push('prebookId');
 
                 setStatus('error');
                 setError(`Missing booking information: ${missing.join(', ')}. Please try again.`);
                 return;
             }
 
-            const { guest, prebookId } = JSON.parse(storedData);
-
-            // Verify prebookId matches (optional security check)
-            if (prebookId !== prebookIdFromUrl) {
-                console.warn("Prebook ID mismatch");
-            }
-
             try {
                 const response = await api.book({
-                    prebookId: prebookIdFromUrl,
+                    prebookId: finalPrebookId,
                     holder: {
                         firstName: guest.firstName,
                         lastName: guest.lastName,
@@ -47,7 +55,7 @@ const BookingConfirmation = () => {
                     },
                     payment: {
                         method: "TRANSACTION_ID",
-                        transactionId: transactionId
+                        transactionId: finalTransactionId
                     },
                     guests: [{
                         occupancyNumber: 1,

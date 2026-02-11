@@ -3,7 +3,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Container, AppBar, Toolbar, Typography, Box, CircularProgress, Alert } from '@mui/material';
 import SearchForm from './components/SearchForm';
 import HotelList from './components/HotelList';
-import HotelDetails from './components/HotelDetails'; // We will create this next
+import HotelDetails from './components/HotelDetails';
+import Checkout from './components/Checkout';
+import BookingConfirmation from './components/BookingConfirmation';
 import { api } from './services/api';
 
 // Wrapper component to use useNavigate
@@ -85,7 +87,8 @@ function App() {
       <Routes>
         <Route path="/" element={<SearchPage />} />
         <Route path="/hotel/:id" element={<HotelDetails />} />
-        <Route path="/checkout" element={<Box sx={{ p: 4 }}>Checkout Page (Coming Soon)</Box>} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/confirmation" element={<BookingConfirmation />} />
       </Routes>
     </Router>
   );

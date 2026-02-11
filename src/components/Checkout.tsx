@@ -61,7 +61,8 @@ const Checkout = () => {
                 guest,
                 hotel,
                 rate,
-                prebookId: data.prebookId
+                prebookId: data.prebookId,
+                transactionId: data.transactionId // Save transactionId if available
             }));
 
             // 3. Move to payment step
@@ -73,7 +74,8 @@ const Checkout = () => {
                     const config = {
                         publicKey: 'sandbox', // Use 'live' for production
                         secretKey: data.secretKey,
-                        returnUrl: `${window.location.origin}/confirmation`,
+                        // Append prebookId AND transactionId to returnUrl
+                        returnUrl: `${window.location.origin}/confirmation?prebookId=${data.prebookId}&transactionId=${data.transactionId || ''}`,
                         targetElement: '#payment-element',
                         appearance: { theme: 'flat' },
                         options: {
