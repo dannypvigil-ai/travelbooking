@@ -8,7 +8,8 @@ import {
     Typography,
     Switch,
     FormControlLabel,
-    Paper
+    Paper,
+    CircularProgress
 } from '@mui/material';
 import { api } from '../services/api';
 import type { Place } from '../services/api';
@@ -31,16 +32,23 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) => {
     const [checkout, setCheckout] = useState<Date | null>(addDays(new Date(), 9));
     const [adults, setAdults] = useState(2);
 
+    const [searchLoading, setSearchLoading] = useState(false);
+
     // Debounce search for places
     useEffect(() => {
         const timer = setTimeout(async () => {
             if (query && query.length > 2 && !aiSearchMode) {
+                setSearchLoading(true);
                 try {
                     const results = await api.searchPlaces(query);
                     setPlaces(results);
                 } catch (e) {
                     console.error(e);
+                } finally {
+                    setSearchLoading(false);
                 }
+            } else {
+                setPlaces([]);
             }
         }, 500);
         return () => clearTimeout(timer);
@@ -104,12 +112,76 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) => {
                                 <Autocomplete
                                     fullWidth
                                     options={places}
-                                    getOptionLabel={(option) => option.displayName || option.formattedAddress}
+                                    loading={searchLoading}
+                                    getOptionLabel={(option) => {
+                                        if (typeof option === 'string') return option;
+                                        return option.displayName || option.formattedAddress;
+                                    }}
                                     filterOptions={(x) => x}
-                                    value={selectedPlace}
-                                    onChange={(_, newValue: Place | null) => setSelectedPlace(newValue)}
-                                    onInputChange={(_, newInputValue) => setQuery(newInputValue)}
-                                    renderInput={(params) => <TextField {...params} label="Destination" required={!selectedPlace} />}
+                                    value={(selectedPlace || query) as any}
+                                    inputValue={query}
+                                    isOptionEqualToValue={(option, value) => {
+                                        if (typeof value === 'string') return option.displayName === value;
+                                        if (typeof option === 'string') return option === value;
+                                        return option.placeId === value.placeId;
+                                    }}
+                                    onChange={(_, newValue: string | Place | null) => {
+                                        if (typeof newValue === 'string') {
+                                            setSelectedPlace(null);
+                                            setQuery(newValue);
+                                        } else if (newValue) {
+                                            setSelectedPlace(newValue);
+                                            setQuery(newValue.displayName || newValue.formattedAddress);
+                                        } else {
+                                            setSelectedPlace(null);
+                                            setQuery('');
+                                        }
+                                    }}
+                                    onInputChange={(_, newInputValue, reason) => {
+                                        if (reason === 'reset' && selectedPlace === null) {
+                                            return;
+                                        }
+                                        setQuery(newInputValue);
+                                        if (newInputValue === '') {
+                                            setSelectedPlace(null);
+                                        }
+                                    }}
+                                    renderOption={(props, option) => {
+                                        const { key, ...otherProps } = props;
+                                        return (
+                                            <li key={option.placeId} {...otherProps}>
+                                                <Grid container alignItems="center">
+                                                    <Grid size={{ md: 'auto' }} sx={{ display: 'flex', width: 44 }}>
+                                                        <Typography variant="body2" color="text.secondary">📍</Typography>
+                                                    </Grid>
+                                                    <Grid size={{ md: 'grow' }} sx={{ width: 'calc(100% - 44px)', wordWrap: 'break-word' }}>
+                                                        <Box component="span" sx={{ fontWeight: 'bold' }}>
+                                                            {option.displayName}
+                                                        </Box>
+                                                        <Typography variant="body2" color="text.secondary">
+                                                            {option.formattedAddress}
+                                                        </Typography>
+                                                    </Grid>
+                                                </Grid>
+                                            </li>
+                                        );
+                                    }}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            label="Destination"
+                                            required={!selectedPlace}
+                                            InputProps={{
+                                                ...params.InputProps,
+                                                endAdornment: (
+                                                    <React.Fragment>
+                                                        {searchLoading ? <CircularProgress color="inherit" size={20} /> : null}
+                                                        {params.InputProps.endAdornment}
+                                                    </React.Fragment>
+                                                ),
+                                            }}
+                                        />
+                                    )}
                                 />
                             )}
                         </Grid>
