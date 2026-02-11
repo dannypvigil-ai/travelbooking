@@ -11,10 +11,12 @@ const SearchPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [hotels, setHotels] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [currentParams, setCurrentParams] = useState<any>(null);
 
   const handleSearch = async (params: any) => {
     setIsLoading(true);
     setError(null);
+    setCurrentParams(params);
     try {
       const data = await api.searchHotels(params);
 
@@ -63,7 +65,7 @@ const SearchPage = () => {
           <CircularProgress />
         </Box>
       ) : (
-        <HotelList hotels={hotels} />
+        <HotelList hotels={hotels} searchParams={currentParams} />
       )}
     </Container>
   );

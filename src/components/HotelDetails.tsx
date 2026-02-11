@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import {
     Container,
     Typography,
@@ -40,16 +40,22 @@ const groupRates = (roomTypes: any[]) => {
 const HotelDetails = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
+    const location = useLocation();
     const [hotel, setHotel] = useState<any>(null);
     const [rates, setRates] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    // Hardcoded search params for now (should come from context/url)
-    const searchParams = {
+    // Get search params from state, fallback to hardcoded (with occupancies fixed)
+    const passedParams = location.state?.searchParams;
+    const searchParams = passedParams ? {
+        ...passedParams,
+        hotelIds: [id || '']
+    } : {
         checkin: '2026-07-01',
         checkout: '2026-07-02',
         adults: 2,
+        occupancies: [{ adults: 2, children: [] }],
         hotelIds: [id || '']
     };
 

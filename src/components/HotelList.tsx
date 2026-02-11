@@ -14,9 +14,10 @@ import { useNavigate } from 'react-router-dom';
 
 interface HotelListProps {
     hotels: any[]; // Combined hotel + rate data
+    searchParams?: any;
 }
 
-const HotelList: React.FC<HotelListProps> = ({ hotels }) => {
+const HotelList: React.FC<HotelListProps> = ({ hotels, searchParams }) => {
     const navigate = useNavigate();
 
     if (!hotels || hotels.length === 0) {
@@ -71,7 +72,7 @@ const HotelList: React.FC<HotelListProps> = ({ hotels }) => {
                                 </Box>
                                 <Button
                                     variant="contained"
-                                    onClick={() => navigate(`/hotel/${hotel.hotelId}`)}
+                                    onClick={() => navigate(`/hotel/${hotel.hotelId}`, { state: { searchParams } })}
                                 >
                                     View Rates
                                 </Button>
