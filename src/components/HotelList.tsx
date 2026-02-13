@@ -15,16 +15,17 @@ import { useNavigate } from 'react-router-dom';
 interface HotelListProps {
     hotels: any[]; // Combined hotel + rate data
     searchParams?: any;
+    hasSearched: boolean;
 }
 
-const HotelList: React.FC<HotelListProps> = ({ hotels, searchParams }) => {
+const HotelList: React.FC<HotelListProps> = ({ hotels, searchParams, hasSearched }) => {
     const navigate = useNavigate();
 
     if (!hotels || hotels.length === 0) {
         return (
             <Box sx={{ mt: 4, textAlign: 'center' }}>
-                <Typography variant="body1" color="text.secondary">
-                    No hotels found. Try adjusting your search.
+                <Typography variant="h5" color="text.secondary" gutterBottom>
+                    {hasSearched ? "No hotels found. Try adjusting your search." : "Ideas for your next trip"}
                 </Typography>
             </Box>
         );

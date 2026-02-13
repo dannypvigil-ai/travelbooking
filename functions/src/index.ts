@@ -62,10 +62,12 @@ const proxyPost = async (path: string, body: any) => {
     }
 };
 
+const router = express.Router();
+
 // --- ROUTES ---
 
 // Search Places (Autocomplete)
-app.get("/liteapi/data/places", async (req, res) => {
+router.get("/liteapi/data/places", async (req, res) => {
     try {
         const data = await proxyGet('/data/places', req.query);
         res.json(data);
@@ -75,7 +77,7 @@ app.get("/liteapi/data/places", async (req, res) => {
 });
 
 // Hotel Details
-app.get("/liteapi/data/hotel", async (req, res) => {
+router.get("/liteapi/data/hotel", async (req, res) => {
     try {
         const data = await proxyGet('/data/hotel', req.query);
         res.json(data);
@@ -85,7 +87,7 @@ app.get("/liteapi/data/hotel", async (req, res) => {
 });
 
 // Hotel Rates (Search)
-app.post("/liteapi/hotels/rates", async (req, res) => {
+router.post("/liteapi/hotels/rates", async (req, res) => {
     try {
         const data = await proxyPost('/hotels/rates', req.body);
         res.json(data);
@@ -98,7 +100,7 @@ app.post("/liteapi/hotels/rates", async (req, res) => {
 // The example server.js adds `usePaymentSdk: true`.
 // My frontend sends `usePaymentSdk: false` usually.
 // If I use SDK here, I can force it.
-app.post("/book/rates/prebook", async (req, res) => {
+router.post("/book/rates/prebook", async (req, res) => {
     try {
         const sdk = getSdk();
         // SDK method: sdk.preBook(body)
@@ -139,7 +141,7 @@ app.post("/book/rates/prebook", async (req, res) => {
 });
 
 // Booking - This is where the magic happens
-app.post("/book/rates/book", async (req, res) => {
+router.post("/book/rates/book", async (req, res) => {
     try {
         const sdk = getSdk(); // Use SDK for booking if possible?
         // server.js: sdk.book(bodyData)
@@ -163,5 +165,8 @@ app.post("/book/rates/book", async (req, res) => {
     }
 });
 
+
+app.use("/api", router);
+app.use("/", router);
 
 export const api = functions.https.onRequest(app);

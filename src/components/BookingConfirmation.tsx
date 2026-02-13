@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Container, Box, Typography, CircularProgress, Alert, Paper, Button } from '@mui/material';
+import { Box, Typography, CircularProgress, Alert, Paper, Button } from '@mui/material';
 import { api } from '../services/api';
 
 const BookingConfirmation = () => {
@@ -95,7 +95,7 @@ const BookingConfirmation = () => {
     if (status === 'error') {
         const paramsObj = Object.fromEntries(searchParams.entries());
         return (
-            <Container maxWidth="md" sx={{ mt: 4 }}>
+            <Box sx={{ mt: 4 }}>
                 <Alert severity="error" sx={{ mb: 2 }}>
                     {error}
                 </Alert>
@@ -106,12 +106,12 @@ const BookingConfirmation = () => {
                 <Button variant="contained" onClick={() => navigate('/')}>
                     Return to Home
                 </Button>
-            </Container>
+            </Box>
         );
     }
 
     return (
-        <Container maxWidth="md" sx={{ py: 4 }}>
+        <Box sx={{ py: 0 }}>
             <Paper sx={{ p: 4, textAlign: 'center' }}>
                 <Typography variant="h4" color="success.main" gutterBottom>
                     Booking Confirmed!
@@ -132,7 +132,7 @@ const BookingConfirmation = () => {
                     Book Another Trip
                 </Button>
             </Paper>
-        </Container>
+        </Box>
     );
 };
 

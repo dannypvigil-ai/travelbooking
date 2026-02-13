@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
-    Container,
     Typography,
     Box,
     TextField,
@@ -31,7 +30,7 @@ const Checkout = () => {
     const [guest, setGuest] = useState({
         firstName: '',
         lastName: '',
-        email: '',
+        email: 'test_user_unique_123@example.com',
         phone: ''
     });
 
@@ -99,7 +98,7 @@ const Checkout = () => {
     if (!offerId) return null;
 
     return (
-        <Container maxWidth="md" sx={{ py: 4 }}>
+        <Box sx={{ py: 0 }}>
             <Typography variant="h4" gutterBottom>Checkout</Typography>
 
             {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
@@ -174,7 +173,7 @@ const Checkout = () => {
                     </Paper>
                 </Grid>
             </Grid>
-        </Container>
+        </Box>
     );
 };
 

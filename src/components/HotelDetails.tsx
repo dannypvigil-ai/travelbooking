@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import {
-    Container,
     Typography,
     Box,
     Grid,
@@ -88,11 +87,11 @@ const HotelDetails = () => {
     }, [id]);
 
     if (isLoading) return <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}><CircularProgress /></Box>;
-    if (error) return <Container sx={{ mt: 4 }}><Alert severity="error">{error}</Alert></Container>;
-    if (!hotel) return <Container sx={{ mt: 4 }}><Alert severity="warning">Hotel not found</Alert></Container>;
+    if (error) return <Box sx={{ mt: 4 }}><Alert severity="error">{error}</Alert></Box>;
+    if (!hotel) return <Box sx={{ mt: 4 }}><Alert severity="warning">Hotel not found</Alert></Box>;
 
     return (
-        <Container maxWidth="lg" sx={{ py: 4 }}>
+        <Box sx={{ py: 0 }}>
             <Box sx={{ mb: 4 }}>
                 <Typography variant="h3" gutterBottom>{hotel.name}</Typography>
                 <Typography variant="subtitle1" color="text.secondary" gutterBottom>
@@ -171,7 +170,7 @@ const HotelDetails = () => {
                     ))}
                 </Grid>
             )}
-        </Container>
+        </Box>
     );
 };
 

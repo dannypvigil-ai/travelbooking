@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "demo-travel-booking"
-  }
+    "default": "demo-travel-booking",
+    "booking-web": "booking-4fbd3"
+  },
+  "targets": {},
+  "etags": {}
 }

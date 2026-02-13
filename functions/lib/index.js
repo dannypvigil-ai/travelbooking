@@ -82,9 +82,10 @@ const proxyPost = async (path, body) => {
         throw e;
     }
 };
+const router = express_1.default.Router();
 // --- ROUTES ---
 // Search Places (Autocomplete)
-app.get("/liteapi/data/places", async (req, res) => {
+router.get("/liteapi/data/places", async (req, res) => {
     try {
         const data = await proxyGet('/data/places', req.query);
         res.json(data);
@@ -94,7 +95,7 @@ app.get("/liteapi/data/places", async (req, res) => {
     }
 });
 // Hotel Details
-app.get("/liteapi/data/hotel", async (req, res) => {
+router.get("/liteapi/data/hotel", async (req, res) => {
     try {
         const data = await proxyGet('/data/hotel', req.query);
         res.json(data);
@@ -104,7 +105,7 @@ app.get("/liteapi/data/hotel", async (req, res) => {
     }
 });
 // Hotel Rates (Search)
-app.post("/liteapi/hotels/rates", async (req, res) => {
+router.post("/liteapi/hotels/rates", async (req, res) => {
     var _a;
     try {
         const data = await proxyPost('/hotels/rates', req.body);
@@ -118,7 +119,7 @@ app.post("/liteapi/hotels/rates", async (req, res) => {
 // The example server.js adds `usePaymentSdk: true`.
 // My frontend sends `usePaymentSdk: false` usually.
 // If I use SDK here, I can force it.
-app.post("/book/rates/prebook", async (req, res) => {
+router.post("/book/rates/prebook", async (req, res) => {
     var _a, _b;
     try {
         const sdk = getSdk();
@@ -155,7 +156,7 @@ app.post("/book/rates/prebook", async (req, res) => {
     }
 });
 // Booking - This is where the magic happens
-app.post("/book/rates/book", async (req, res) => {
+router.post("/book/rates/book", async (req, res) => {
     var _a, _b;
     try {
         const sdk = getSdk(); // Use SDK for booking if possible?
@@ -176,5 +177,7 @@ app.post("/book/rates/book", async (req, res) => {
         res.status(500).json({ error: e.message, details: (_b = e.response) === null || _b === void 0 ? void 0 : _b.data });
     }
 });
+app.use("/api", router);
+app.use("/", router);
 exports.api = functions.https.onRequest(app);
 //# sourceMappingURL=index.js.map
