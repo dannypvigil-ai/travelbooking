@@ -32,13 +32,23 @@ const HotelList: React.FC<HotelListProps> = ({ hotels, searchParams, hasSearched
     }
 
     return (
-        <Grid container spacing={3} sx={{ mt: 2 }}>
+        <Grid container spacing={3} sx={{ mt: 0 }}>
             {hotels.map((hotel) => (
                 <Grid size={{ xs: 12 }} key={hotel.hotelId}>
-                    <Card sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' } }}>
+                    <Card
+                        onClick={() => navigate(`/hotel/${hotel.hotelId}`, { state: { searchParams } })}
+                        sx={{
+                            display: 'flex',
+                            flexDirection: { xs: 'column', md: 'row' },
+                            height: { md: 250 },
+                            cursor: 'pointer',
+                            transition: 'background-color 0.2s',
+                            '&:hover': { backgroundColor: '#F0E6FF' }
+                        }}
+                    >
                         <CardMedia
                             component="img"
-                            sx={{ width: { xs: '100%', md: 300 }, height: 200, objectFit: 'cover' }}
+                            sx={{ width: { xs: '100%', md: 300 }, height: { xs: 200, md: 250 }, objectFit: 'cover' }}
                             image={hotel.main_photo || 'https://via.placeholder.com/300x200?text=No+Image'}
                             alt={hotel.name}
                         />
@@ -62,7 +72,7 @@ const HotelList: React.FC<HotelListProps> = ({ hotels, searchParams, hasSearched
                                     ))}
                                 </Box>
                             </CardContent>
-                            <Box sx={{ display: 'flex', alignItems: 'center', p: 2, justifyContent: 'flex-end', bgcolor: 'background.default' }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', p: 2, justifyContent: 'flex-end' }}>
                                 <Box sx={{ mr: 2, textAlign: 'right' }}>
                                     <Typography variant="caption" display="block" color="text.secondary">
                                         Starting from
@@ -73,7 +83,7 @@ const HotelList: React.FC<HotelListProps> = ({ hotels, searchParams, hasSearched
                                 </Box>
                                 <Button
                                     variant="contained"
-                                    onClick={() => navigate(`/hotel/${hotel.hotelId}`, { state: { searchParams } })}
+                                    color="primary"
                                 >
                                     View Rates
                                 </Button>

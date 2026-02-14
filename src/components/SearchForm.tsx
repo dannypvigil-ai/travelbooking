@@ -84,29 +84,37 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) => {
 
     return (
         <LocalizationProvider dateAdapter={AdapterDateFns}>
-            <Paper elevation={3} sx={{ p: 4, mt: 4 }}>
-                <Typography variant="h5" gutterBottom>Find Your Perfect Stay</Typography>
-                <Box component="form" onSubmit={handleSubmit}>
-                    {/* Using Grid2 syntax (size prop) as item/xs props seem unsupported */}
-                    <Grid container spacing={3}>
-                        <Grid size={{ xs: 12 }}>
-                            <ButtonGroup size="medium" variant="outlined" sx={{ mb: 1 }}>
-                                <Button
-                                    variant={!aiSearchMode ? "contained" : "outlined"}
-                                    onClick={() => setAiSearchMode(false)}
-                                >
-                                    By Location
-                                </Button>
-                                <Button
-                                    variant={aiSearchMode ? "contained" : "outlined"}
-                                    onClick={() => setAiSearchMode(true)}
-                                >
-                                    By Vibe
-                                </Button>
-                            </ButtonGroup>
-                        </Grid>
+            <Paper elevation={3} sx={{ p: 4 }}>
+                <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    {/* Centered Mode Selection */}
+                    <Box sx={{ mb: 3, width: '100%', display: 'flex', justifyContent: 'center' }}>
+                        <ButtonGroup size="medium" variant="outlined">
+                            <Button
+                                variant={!aiSearchMode ? "contained" : "outlined"}
+                                onClick={() => setAiSearchMode(false)}
+                            >
+                                By Location
+                            </Button>
+                            <Button
+                                variant={aiSearchMode ? "contained" : "outlined"}
+                                onClick={() => setAiSearchMode(true)}
+                            >
+                                By Vibe
+                            </Button>
+                        </ButtonGroup>
+                    </Box>
 
-                        <Grid size={{ xs: 12, md: 3.5 }}>
+                    {/* Centered Search Fields */}
+                    <Box sx={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        gap: 2,
+                        width: '100%'
+                    }}>
+                        {/* Destination */}
+                        <Box sx={{ width: '350px' }}>
                             {aiSearchMode ? (
                                 <TextField
                                     fullWidth
@@ -191,9 +199,10 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) => {
                                     )}
                                 />
                             )}
-                        </Grid>
+                        </Box>
 
-                        <Grid size={{ xs: 12, md: 4.5 }}>
+                        {/* Dates */}
+                        <Box sx={{ width: '350px' }}>
                             <DateRangePicker
                                 calendars={2}
                                 value={dateRange}
@@ -207,8 +216,10 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) => {
                                     }
                                 }}
                             />
-                        </Grid>
-                        <Grid size={{ xs: 4, md: 1 }}>
+                        </Box>
+
+                        {/* Adults */}
+                        <Box sx={{ width: '75px' }}>
                             <TextField
                                 fullWidth
                                 type="number"
@@ -217,16 +228,17 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) => {
                                 onChange={(e) => setAdults(Number(e.target.value))}
                                 inputProps={{ min: 1 }}
                             />
-                        </Grid>
+                        </Box>
 
-                        <Grid size={{ xs: 8, md: 'auto' }} sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                        {/* Search Button */}
+                        <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                             <Button
                                 type="submit"
                                 variant="contained"
                                 size="large"
                                 disabled={isLoading}
                                 sx={{
-                                    px: '16px',
+                                    px: '24px',
                                     height: '56px',
                                     minWidth: 'auto',
                                     whiteSpace: 'nowrap'
@@ -234,9 +246,10 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) => {
                             >
                                 {isLoading ? 'Searching...' : 'Search Hotels'}
                             </Button>
-                        </Grid>
-                    </Grid>
+                        </Box>
+                    </Box>
                 </Box>
+
             </Paper>
         </LocalizationProvider>
     );

@@ -30,7 +30,7 @@ const Checkout = () => {
     const [guest, setGuest] = useState({
         firstName: '',
         lastName: '',
-        email: 'test_user_unique_123@example.com',
+        email: 'traveler@nomadist.com',
         phone: ''
     });
 
@@ -150,16 +150,16 @@ const Checkout = () => {
                                         />
                                     </Grid>
                                 </Grid>
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    size="large"
-                                    fullWidth
-                                    sx={{ mt: 3 }}
-                                    disabled={isLoading}
-                                >
-                                    {isLoading ? <CircularProgress size={24} /> : 'Proceed to Payment'}
-                                </Button>
+                                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        size="large"
+                                        disabled={isLoading}
+                                    >
+                                        {isLoading ? <CircularProgress size={24} /> : 'Proceed to Payment'}
+                                    </Button>
+                                </Box>
                                 <Alert severity="info" sx={{ mt: 2 }}>
                                     Sandbox Mode: Use card 4242 4242 4242 4242 (Any future date, any CVV)
                                 </Alert>
@@ -167,6 +167,9 @@ const Checkout = () => {
                         ) : (
                             <Box>
                                 <Typography variant="h6" gutterBottom>Payment</Typography>
+                                <Alert severity="info" sx={{ mb: 2 }}>
+                                    Sandbox Mode: Use card 4242 4242 4242 4242 (Any future date, any CVV)
+                                </Alert>
                                 <div id="payment-element" style={{ minHeight: 400 }}></div>
                             </Box>
                         )}
