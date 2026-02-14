@@ -64,18 +64,19 @@ const SearchPage = () => {
       <Box
         sx={{
           width: '100%',
-          height: '400px',
-          backgroundImage: `url(${travelBackground})`,
+          height: { xs: 'auto', md: '400px' },
+          backgroundImage: { xs: 'none', md: `url(${travelBackground})` },
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          mb: 4
+          mb: 4,
+          pt: { xs: '120px', md: 0 }
         }}
       >
-        <Container maxWidth="md">
+        <Container sx={{ maxWidth: '1150px !important' }}>
           <SearchForm onSearch={handleSearch} isLoading={isLoading} />
         </Container>
       </Box>

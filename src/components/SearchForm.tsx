@@ -3,17 +3,16 @@ import {
     Box,
     TextField,
     Button,
+    ButtonGroup,
     Autocomplete,
     Grid,
     Typography,
-    Switch,
-    FormControlLabel,
     Paper,
     CircularProgress
 } from '@mui/material';
 import { api } from '../services/api';
 import type { Place } from '../services/api';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { format, addDays } from 'date-fns';
@@ -28,8 +27,10 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) => {
     const [places, setPlaces] = useState<Place[]>([]);
     const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
     const [aiSearchMode, setAiSearchMode] = useState(false);
-    const [checkin, setCheckin] = useState<Date | null>(addDays(new Date(), 7));
-    const [checkout, setCheckout] = useState<Date | null>(addDays(new Date(), 9));
+    const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([
+        addDays(new Date(), 1),
+        addDays(new Date(), 2)
+    ]);
     const [adults, setAdults] = useState(2);
 
     const [searchLoading, setSearchLoading] = useState(false);
@@ -56,6 +57,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        const [checkin, checkout] = dateRange;
         if (!checkin || !checkout) return;
 
         const params: any = {
@@ -88,18 +90,23 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) => {
                     {/* Using Grid2 syntax (size prop) as item/xs props seem unsupported */}
                     <Grid container spacing={3}>
                         <Grid size={{ xs: 12 }}>
-                            <FormControlLabel
-                                control={
-                                    <Switch
-                                        checked={aiSearchMode}
-                                        onChange={(e) => setAiSearchMode(e.target.checked)}
-                                    />
-                                }
-                                label={aiSearchMode ? "AI Search (Search by Vibe)" : "Standard Search (Location)"}
-                            />
+                            <ButtonGroup size="medium" variant="outlined" sx={{ mb: 1 }}>
+                                <Button
+                                    variant={!aiSearchMode ? "contained" : "outlined"}
+                                    onClick={() => setAiSearchMode(false)}
+                                >
+                                    By Location
+                                </Button>
+                                <Button
+                                    variant={aiSearchMode ? "contained" : "outlined"}
+                                    onClick={() => setAiSearchMode(true)}
+                                >
+                                    By Vibe
+                                </Button>
+                            </ButtonGroup>
                         </Grid>
 
-                        <Grid size={{ xs: 12, md: 5 }}>
+                        <Grid size={{ xs: 12, md: 3.5 }}>
                             {aiSearchMode ? (
                                 <TextField
                                     fullWidth
@@ -186,23 +193,22 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) => {
                             )}
                         </Grid>
 
-                        <Grid size={{ xs: 12, md: 3 }}>
-                            <DatePicker
-                                label="Check-in"
-                                value={checkin}
-                                onChange={(newValue) => setCheckin(newValue)}
-                                slotProps={{ textField: { fullWidth: true, required: true } }}
+                        <Grid size={{ xs: 12, md: 4.5 }}>
+                            <DateRangePicker
+                                calendars={2}
+                                value={dateRange}
+                                onChange={(newValue) => setDateRange(newValue)}
+                                localeText={{ start: 'Check-in', end: 'Check-out' }}
+                                format="eee, MMM d"
+                                slotProps={{
+                                    textField: {
+                                        fullWidth: true,
+                                        label: 'Dates'
+                                    }
+                                }}
                             />
                         </Grid>
-                        <Grid size={{ xs: 12, md: 3 }}>
-                            <DatePicker
-                                label="Check-out"
-                                value={checkout}
-                                onChange={(newValue) => setCheckout(newValue)}
-                                slotProps={{ textField: { fullWidth: true, required: true } }}
-                            />
-                        </Grid>
-                        <Grid size={{ xs: 6, md: 1 }}>
+                        <Grid size={{ xs: 4, md: 1 }}>
                             <TextField
                                 fullWidth
                                 type="number"
@@ -213,13 +219,18 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) => {
                             />
                         </Grid>
 
-                        <Grid size={{ xs: 12 }}>
+                        <Grid size={{ xs: 8, md: 'auto' }} sx={{ display: 'flex', alignItems: 'flex-end' }}>
                             <Button
                                 type="submit"
                                 variant="contained"
                                 size="large"
-                                fullWidth
                                 disabled={isLoading}
+                                sx={{
+                                    px: '16px',
+                                    height: '56px',
+                                    minWidth: 'auto',
+                                    whiteSpace: 'nowrap'
+                                }}
                             >
                                 {isLoading ? 'Searching...' : 'Search Hotels'}
                             </Button>
