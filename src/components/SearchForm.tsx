@@ -99,7 +99,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) => {
                                 variant={aiSearchMode ? "contained" : "outlined"}
                                 onClick={() => setAiSearchMode(true)}
                             >
-                                By Vibe
+                                By Vibe (AI)
                             </Button>
                         </ButtonGroup>
                     </Box>
