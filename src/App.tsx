@@ -9,6 +9,7 @@ import HotelList from './components/HotelList';
 import HotelDetails from './components/HotelDetails';
 import Checkout from './components/Checkout';
 import BookingConfirmation from './components/BookingConfirmation';
+import Footer from './components/Footer';
 import { api } from './services/api';
 import travelBackground from './assets/travel-background.jpg';
 import nomadistLogo from './assets/Nomadist-logo.svg';
@@ -50,7 +51,7 @@ const SearchPage: React.FC<SearchPageProps> = ({
           display: 'flex',
           alignItems: 'flex-start', // Top justify
           justifyContent: 'center',
-          mb: currentParams ? 0 : 4,
+          mb: 0,
           pt: { xs: '120px', md: currentParams ? 5 : 3 }, // 40px when shrunk, 24px when full
           transition: 'height 0.8s ease-in-out',
           overflow: 'hidden'
@@ -61,7 +62,8 @@ const SearchPage: React.FC<SearchPageProps> = ({
             <Typography
               variant="h4"
               sx={{
-                color: '#8e799f',
+                color: '#663B89',
+                fontSize: '24px',
                 fontWeight: 500,
                 mb: 3, // 24px (3*8) gap to search form
                 textAlign: 'center'
@@ -104,7 +106,6 @@ const SearchPage: React.FC<SearchPageProps> = ({
             <HotelList
               hotels={hotels}
               searchParams={currentParams}
-              hasSearched={currentParams !== null}
             />
           </>
         )}
@@ -208,7 +209,7 @@ function MainView() {
   };
 
   return (
-    <>
+    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <AppBar position="static" elevation={0}>
         <Toolbar sx={{ justifyContent: 'space-between', position: 'relative' }}>
           {/* Far Left: Logo */}
@@ -245,7 +246,7 @@ function MainView() {
         </Toolbar>
       </AppBar>
 
-      <Box sx={{ py: 0 }}>
+      <Box sx={{ flexGrow: 1, py: 0 }}>
         <Routes>
           <Route path="/" element={
             <SearchPage
@@ -273,7 +274,8 @@ function MainView() {
           />
         </Routes>
       </Box>
-    </>
+      <Footer />
+    </Box>
   );
 }
 
